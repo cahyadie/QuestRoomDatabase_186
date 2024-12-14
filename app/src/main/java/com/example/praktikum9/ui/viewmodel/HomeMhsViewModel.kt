@@ -1,7 +1,7 @@
 package com.example.praktikum9.ui.viewmodel
+import androidx.lifecycle.ViewModel
 import com.example.praktikum9.data.entity.Mahasiswa
-
-
+import com.example.praktikum9.repository.RepositoryMhs
 
 
 class HomeMhsViewModel()
