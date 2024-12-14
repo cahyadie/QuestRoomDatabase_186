@@ -1,12 +1,53 @@
 package com.example.praktikum9.ui.viewmodel
+
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.praktikum9.data.entity.Mahasiswa
 import com.example.praktikum9.repository.RepositoryMhs
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 
-class HomeMhsViewModel()
 
+class HomeMhsViewModel(
+    private val repositoryMhs: RepositoryMhs
+) : ViewModel() {
 
+    val homeUiState: StateFlow<HomeUiState> =  repositoryMhs.getAllMahasiswa()
+        .filterNotNull()
+        .map{
+            HomeUiState(
+                listMhs = it.toList(),
+                isLoading = false,
+            )
+        }
+        .onStart {
+            emit(HomeUiState(isLoading = true))
+            delay(900)
+        }
+        .catch {
+            emit (
+                HomeUiState(
+                    isLoading = false,
+                    isError = true,
+                    errorMessages = it.message ?: "terjadi kesalahan"
+                )
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState(
+                isLoading = true,
+            )
+        )
+}
 
 data class HomeUiState(
     val listMhs: List<Mahasiswa> = listOf(),
@@ -14,31 +55,3 @@ data class HomeUiState(
     val isError: Boolean = false,
     val errorMessages: String = ""
 )
-
-
-class DetailMhsViewModel()
-
-
-data class DetailUiState(
-    val detailUiEvent : MahasiswaEvent = MahasiswaEvent(),
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val errorMessages: String = ""
-){
-    val isUiEventEmpty: Boolean
-        get() = detailUiEvent == MahasiswaEvent()
-
-    val isUiEventNotEmpty : Boolean
-        get() = detailUiEvent != MahasiswaEvent()
-}
-
-fun Mahasiswa.toDtailUiEvent() : MahasiswaEvent {
-    return MahasiswaEvent(
-        nim = nim,
-        nama = nama,
-        jenisKelamin = jenisKelamin,
-        alamat = alamat,
-        kelas = kelas,
-        angkatan = angkatan
-    )
-}
