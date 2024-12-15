@@ -21,12 +21,12 @@ class MahasiswaViewModel(private val repositoryMhs: RepositoryMhs) : ViewModel()
     private fun validateFields(): Boolean {
         val event = uiState.mahasiswaEvent
         val errorState = FormErrorState(
-            nim = if (event.nim.isEmpty()) null else "NIM tidak boleh kosong",
-            nama = if (event.nim.isEmpty()) null else "nama tidak boleh kosong",
-            jenisKelamin = if (event.nim.isEmpty()) null else "jenisKelamin tidak boleh kosong",
-            alamat = if (event.nim.isEmpty()) null else "kelas tidak boleh kosong",
-            kelas = if (event.nim.isEmpty()) null else "kelas tidak boleh kosong",
-            angkatan = if (event.nim.isEmpty()) null else "angkatan tidak boleh kosong",
+            nim = if (event.nim.isNotEmpty()) null else "NIM tidak boleh kosong",
+            nama = if (event.nim.isNotEmpty()) null else "nama tidak boleh kosong",
+            jenisKelamin = if (event.nim.isNotEmpty()) null else "jenisKelamin tidak boleh kosong",
+            alamat = if (event.nim.isNotEmpty()) null else "kelas tidak boleh kosong",
+            kelas = if (event.nim.isNotEmpty()) null else "kelas tidak boleh kosong",
+            angkatan = if (event.nim.isNotEmpty()) null else "angkatan tidak boleh kosong"
         )
         uiState = uiState.copy(isEntryValid = errorState)
             return errorState.isValid()
