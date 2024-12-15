@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.praktikum9.ui.costumwidget.TopAppBar
-import com.example.praktikum9.ui.viewmodel.PenyediaViewModel
 import com.example.praktikum9.ui.viewmodel.UpdateMhsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -54,9 +53,10 @@ fun UpdateMhsView(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                judul ="Edit mahasiswa",
-                showBackButton = true,
                 onBack = onBack,
+                showBackButton = true,
+                judul ="Edit mahasiswa",
+                modifier = modifier,
             )
         }
     ) { padding ->
